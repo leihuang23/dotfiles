@@ -35,7 +35,7 @@ Running the switch builds:
 On a brand new Mac, from a bare clone of this repo:
 
 ```sh
-git clone <this-repo-url>
+git clone git@github.com:leihuang23/dotfiles.git
 cd dotfiles
 ```
 
