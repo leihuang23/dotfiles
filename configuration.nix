@@ -38,6 +38,7 @@
     brews = [
       "herdr"
       "kimi-code"
+      "gh"
     ];
     casks = [
       "wezterm"
