@@ -16,6 +16,7 @@ in
     jq        # json on the command line
     lazygit
     neovim
+    zoxide    # smart cd (replaces omz 'z' plugin)
     # the font everything renders in
     nerd-fonts.hack
   ];
@@ -28,6 +29,7 @@ in
     syntaxHighlighting.enable = true;  # commands turn green when valid
     initContent = ''
       bindkey '^f' autosuggest-accept
+      [[ -f ~/.zsh/extra.zsh ]] && source ~/.zsh/extra.zsh
     '';
     shellAliases = {
       ".." = "cd ..";
@@ -53,6 +55,14 @@ in
     };
   };
 
+  programs.git = {
+    enable = true;
+    settings.user = {
+      name = "leihuang";
+      email = "leihuang531@gmail.com";
+    };
+  };
+
   # Edit-in-place: the real file stays in my repo, ~/.config just points at it.
   home.file.".config/wezterm".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/wezterm";
@@ -62,6 +72,12 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
   home.file.".claude/settings.json".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
+  home.file.".zsh/extra.zsh".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.zsh/extra.zsh";
+  home.file.".kimi-code/config.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/config.toml";
+  home.file.".kimi-code/tui.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/tui.toml";
 
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
