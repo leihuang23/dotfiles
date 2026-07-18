@@ -39,6 +39,7 @@
       "herdr"
       "kimi-code"
       "gh"
+      "tmux"
     ];
     casks = [
       "wezterm"
