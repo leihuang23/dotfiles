@@ -78,9 +78,25 @@ if [[ -n "$DEEPSEEK_API_KEY" ]]; then
 fi
 
 # ----- Node Version Manager -----
+# nvm owns interactive `node` / `npm` / global CLIs.
+# DevEco above sets NODE_HOME and puts its node on PATH for HarmonyOS tooling;
+# zsh's unique PATH keeps the first occurrence, so a later nvm path that is
+# already present does not move to the front. Re-strip and re-prepend after load.
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+if command -v nvm >/dev/null 2>&1; then
+  # Prefer the configured default, not "current" (which can be "system" when
+  # DevEco/Homebrew already won PATH before nvm finished loading).
+  _nvm_node="$(nvm which default 2>/dev/null || true)"
+  if [[ -n "$_nvm_node" && "$_nvm_node" != system && -x "$_nvm_node" ]]; then
+    _nvm_bin="${_nvm_node:h}"
+    path=("${_nvm_bin}" ${path:#${_nvm_bin}})
+    export PATH
+    nvm use default --silent 2>/dev/null || true
+  fi
+  unset _nvm_node _nvm_bin
+fi
 
 # ----- zoxide (replaces omz 'z' plugin) -----
 if command -v zoxide >/dev/null 2>&1; then
