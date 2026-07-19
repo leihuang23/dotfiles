@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+# Install an agent skill from a GitHub subfolder URL into ~/.agents/skills.
+#
+# Usage:
+#   install-skill <github-subfolder-url> [--force]
+#
+# Example:
+#   install-skill https://github.com/mitsuhiko/agent-stuff/tree/main/skills/tmux
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: install-skill <github-subfolder-url> [--force]
+
+Copy a skill subfolder from GitHub into ~/.agents/skills/<skill-id>/.
+
+URL must be a GitHub tree URL pointing at a subfolder, e.g.:
+  https://github.com/mitsuhiko/agent-stuff/tree/main/skills/tmux
+
+Options:
+  --force   Overwrite the destination if it already exists
+  -h, --help  Show this help
+EOF
+}
+
+url=""
+force=0
+
+for arg in "$@"; do
+  case "$arg" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --force)
+      force=1
+      ;;
+    -*)
+      echo "error: unknown option: $arg" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "$url" ]]; then
+        echo "error: unexpected argument: $arg" >&2
+        usage >&2
+        exit 2
+      fi
+      url="$arg"
+      ;;
+  esac
+done
+
+if [[ -z "$url" ]]; then
+  usage >&2
+  exit 2
+fi
+
+# Expect: https://github.com/<owner>/<repo>/tree/<ref>/<path...>
+# <ref> is a single path segment (branch, tag, or short SHA).
+if [[ ! "$url" =~ ^https?://github\.com/([^/]+)/([^/]+)/tree/([^/]+)/(.+)$ ]]; then
+  echo "error: URL must look like https://github.com/<owner>/<repo>/tree/<ref>/<path>" >&2
+  echo "got: $url" >&2
+  exit 2
+fi
+
+owner="${BASH_REMATCH[1]}"
+repo="${BASH_REMATCH[2]}"
+ref="${BASH_REMATCH[3]}"
+# strip trailing slash
+subdir="${BASH_REMATCH[4]%/}"
+skill_id="${subdir##*/}"
+
+if [[ -z "$skill_id" || "$skill_id" == "." || "$skill_id" == ".." ]]; then
+  echo "error: could not derive skill id from path: $subdir" >&2
+  exit 2
+fi
+
+skills_dir="${HOME}/.agents/skills"
+dest="${skills_dir}/${skill_id}"
+
+if [[ -e "$dest" && "$force" -ne 1 ]]; then
+  echo "error: destination already exists: $dest" >&2
+  echo "re-run with --force to overwrite" >&2
+  exit 1
+fi
+
+tmp="$(mktemp -d "${TMPDIR:-/tmp}/install-skill.XXXXXX")"
+cleanup() {
+  rm -rf "$tmp"
+}
+trap cleanup EXIT
+
+echo "fetching ${owner}/${repo}@${ref}:${subdir} ..."
+
+# Sparse clone so we only materialize the requested subfolder.
+git clone -q --depth 1 --filter=blob:none --sparse \
+  --branch "$ref" \
+  "https://github.com/${owner}/${repo}.git" \
+  "$tmp/repo"
+
+git -C "$tmp/repo" sparse-checkout set --cone "$subdir"
+
+src="$tmp/repo/$subdir"
+if [[ ! -d "$src" ]]; then
+  echo "error: path not found in repo: $subdir" >&2
+  exit 1
+fi
+
+mkdir -p "$skills_dir"
+rm -rf "$dest"
+cp -R "$src" "$dest"
+
+if [[ ! -f "$dest/SKILL.md" ]]; then
+  echo "warning: installed skill has no SKILL.md: $dest" >&2
+fi
+
+echo "installed ${skill_id} -> ${dest}"

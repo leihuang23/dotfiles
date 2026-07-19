@@ -44,6 +44,7 @@
     casks = [
       "wezterm"
       "claude-code"
+      "cc-switch"  # GUI provider manager for Claude Code / Codex / etc.
     ];
   };
 }

@@ -70,14 +70,17 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
   home.file.".config/herdr".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
-  home.file.".claude/settings.json".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.claude/settings.json";
+  # ~/.claude/settings.json is owned by CC Switch (provider switching writes it).
+  # Do not manage it with home-manager - a store/out-of-store symlink blocks or
+  # git-dirties every provider switch. See README "Claude Code + CC Switch".
   home.file.".zsh/extra.zsh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.zsh/extra.zsh";
   home.file.".kimi-code/config.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/config.toml";
   home.file.".kimi-code/tui.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/tui.toml";
+  home.file.".local/bin/install-skill".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/bin/install-skill";
 
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";

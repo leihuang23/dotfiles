@@ -76,3 +76,10 @@ display_name = "K3"
 support_efforts = [ "low", "high", "max" ]
 default_effort = "max"
 
+
+# firstmate-managed-kimi-turnend (do not edit by hand; owned by fm-spawn)
+[[hooks]]
+event = "Stop"
+matcher = ""
+command = "bash '/Users/leihuang/.kimi-code/hooks/fm-turn-end.sh'"
+timeout = 10

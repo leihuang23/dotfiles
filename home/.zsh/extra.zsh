@@ -71,11 +71,11 @@ if [[ -f "$HOME/.zshrc.secrets" ]]; then
   source "$HOME/.zshrc.secrets"
 fi
 
-# Derive Claude Code DeepSeek credentials from the single DeepSeek key.
-# Use ANTHROPIC_AUTH_TOKEN (not ANTHROPIC_API_KEY) when pointing at a custom base URL.
-if [[ -n "$DEEPSEEK_API_KEY" ]]; then
-  export ANTHROPIC_AUTH_TOKEN="$DEEPSEEK_API_KEY"
-fi
+# Claude Code auth / base URL are owned by CC Switch provider profiles
+# (~/.claude/settings.json). Do NOT export ANTHROPIC_AUTH_TOKEN or
+# ANTHROPIC_BASE_URL here - shell env wins over settings.json and would pin
+# every provider switch back to whichever key you export.
+# DEEPSEEK_API_KEY may still live in ~/.zshrc.secrets for non-Claude tools.
 
 # ----- Node Version Manager -----
 # nvm owns interactive `node` / `npm` / global CLIs.
