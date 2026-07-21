@@ -84,12 +84,6 @@ if [[ -f "$HOME/.zshrc.secrets" ]]; then
   source "$HOME/.zshrc.secrets"
 fi
 
-# Claude Code auth / base URL are owned by CC Switch provider profiles
-# (~/.claude/settings.json). Do NOT export ANTHROPIC_AUTH_TOKEN or
-# ANTHROPIC_BASE_URL here - shell env wins over settings.json and would pin
-# every provider switch back to whichever key you export.
-# DEEPSEEK_API_KEY may still live in ~/.zshrc.secrets for non-Claude tools.
-
 # ----- Node Version Manager -----
 # nvm owns interactive `node` / `npm` / global CLIs.
 # DevEco above sets NODE_HOME and puts its node on PATH for HarmonyOS tooling;

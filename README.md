@@ -12,14 +12,13 @@ Running the switch builds:
 - System settings (dark mode, key repeat, dock, Finder, trackpad)
 - Homebrew apps (casks and CLI tools)
   - CLI tools: `herdr`, `kimi-code`
-  - Casks: `wezterm`, `claude-code`, `cc-switch`
+  - Casks: `wezterm`, `codexbar`
 - Nix user packages (`ripgrep`, `fd`, `fzf`, `jq`, `lazygit`, `neovim`, `hack` nerd font)
 - Shell (`zsh`, aliases, [starship](https://starship.rs) prompt)
 - Editor (Neovim config with the rose-pine moon theme)
 - Terminal (WezTerm config with the rose-pine moon theme)
-- Agent configs (Claude, Codex, opencode, and Kimi Code)
-  - Claude Code provider/API config is managed by [CC Switch](https://github.com/farion1231/cc-switch), not home-manager.
-  - Claude, Codex, and opencode share one `AGENTS.md`.
+- Agent configs (Codex, opencode, Grok, and Kimi Code)
+  - Codex, opencode, Grok, and agents share one `AGENTS.md`.
   - Kimi Code config is managed under `home/.kimi-code/`.
 
 ## Prerequisites
@@ -105,53 +104,10 @@ Read through `brews` and `casks` before you run `bootstrap.sh` or `rebuild.sh` f
 
 **Heads-up:**
 
-- `home/AGENTS.md` is inherited from the original repo and is installed for Claude, Codex, and opencode.
-  If you clone this repo, you'd silently inherit those agent instructions — edit or delete `home/AGENTS.md` if you don't want that.
-- The `cc` and `co` shell aliases in `home.nix` are high-agency shortcuts: `claude --dangerously-skip-permissions` and `codex --full-auto`.
-  They're convenient, but know what they do before you use them.
-
-## Claude Code + CC Switch
-
-[CC Switch](https://github.com/farion1231/cc-switch) is the single source of truth for Claude Code (and Codex / Gemini / etc.) **provider** config: API keys, base URLs, and model defaults.
-
-### Ownership split
-
-| Path | Owner | Notes |
-|------|--------|--------|
-| `~/.cc-switch/` | CC Switch | SQLite DB, device settings, skills SSOT, backups |
-| `~/.claude/settings.json` | CC Switch | Written on provider switch. **Not** managed by home-manager. |
-| `~/.claude/CLAUDE.md` | home-manager | Symlink to shared `home/AGENTS.md` |
-| `home/.claude/settings.example.json` | git (template only) | Seed / reference. No live keys. |
-
-Do **not** re-add `home.file.".claude/settings.json"` in `home.nix`. A managed symlink either blocks CC Switch writes or dirties git on every provider switch.
-
-Do **not** export `ANTHROPIC_AUTH_TOKEN` / `ANTHROPIC_BASE_URL` in shell config. Shell env wins over `settings.json` and pins every switch to one provider. Keep raw keys like `DEEPSEEK_API_KEY` in `~/.zshrc.secrets` only for non-Claude tools; put Claude credentials inside each CC Switch provider profile.
-
-### First-time / recovery
-
-1. Install via this repo (`cc-switch` is in the Homebrew casks list) and open **CC Switch**.
-2. On first launch, import the live Claude config as a provider, or add presets (DeepSeek, OpenRouter, Official, …).
-3. Put shared non-provider fields (hooks, statusLine, plugins) in **Edit Provider → Shared Config** so they survive switches.
-4. Skills: prefer storage at `~/.agents/skills` (this machine already symlinks `~/.claude/skills` there). Set that in CC Switch Skills settings if it is still on the built-in `~/.cc-switch/skills` path.
-5. Optional seed without secrets: copy `home/.claude/settings.example.json` → `~/.claude/settings.json`, then import it in CC Switch and fill the key.
-
-### DeepSeek example
-
-A typical DeepSeek provider `env` block (key only in CC Switch / live file, never in git):
-
-```json
-{
-  "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
-  "ANTHROPIC_AUTH_TOKEN": "<your-deepseek-api-key>",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro[1m]",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro[1m]",
-  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash[1m]",
-  "CLAUDE_CODE_EFFORT_LEVEL": "max",
-  "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
-}
-```
-
-Inside Claude Code, switch models with `/model opus`, `/model sonnet`, or `/model haiku`. Switch **providers** from the CC Switch tray or main UI (Claude Code hot-reloads provider data).
+- `home/AGENTS.md` is inherited from the original repo and is installed for Codex, opencode, Grok, and related agents.
+  If you clone this repo, you'd silently inherit those agent instructions - edit or delete `home/AGENTS.md` if you don't want that.
+- The `co` shell alias in `home.nix` is a high-agency shortcut: `codex --full-auto`.
+  It's convenient, but know what it does before you use it.
 
 ## Repo tour
 
@@ -162,7 +118,7 @@ Inside Claude Code, switch models with `/model opus`, `/model sonnet`, or `/mode
 - `rebuild.sh` - re-applies the config after the first switch.
   Run this every time you make a change.
 - `bootstrap.sh` - one-time fresh-Mac setup.
-- `home/` - the actual config files that get symlinked into place (Neovim, WezTerm, herdr, Claude settings, Kimi Code settings, the shared `AGENTS.md`).
+- `home/` - the actual config files that get symlinked into place (Neovim, WezTerm, herdr, Kimi Code settings, the shared `AGENTS.md`).
 
 ## How the symlinks work
 

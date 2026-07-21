@@ -37,7 +37,6 @@ in
       push = "git push";
       pull = "git pull";
       m = "git switch main";
-      cc = "claude --dangerously-skip-permissions";
       co = "codex --full-auto";
     };
   };
@@ -70,9 +69,6 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/nvim";
   home.file.".config/herdr".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.config/herdr";
-  # ~/.claude/settings.json is owned by CC Switch (provider switching writes it).
-  # Do not manage it with home-manager - a store/out-of-store symlink blocks or
-  # git-dirties every provider switch. See README "Claude Code + CC Switch".
   home.file.".zsh/extra.zsh".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.zsh/extra.zsh";
   home.file.".kimi-code/config.toml".source =
@@ -84,8 +80,6 @@ in
   home.file.".local/bin/install-skill".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/bin/install-skill";
 
-  home.file.".claude/CLAUDE.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".codex/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/AGENTS.md".source =
@@ -96,9 +90,7 @@ in
   # Kimi Code reads ~/.agents/AGENTS.md as generic cross-tool instructions.
   home.file.".agents/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
-  # RTK instructions SSOT (Codex/Claude init + agents that @include this file)
+  # RTK instructions SSOT (Codex init + agents that @include this file)
   home.file.".codex/RTK.md".source =
-    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/RTK.md";
-  home.file.".claude/RTK.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/RTK.md";
 }
