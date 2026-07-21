@@ -23,6 +23,10 @@ fpath=("$HOME/.zsh/completions" $fpath)
 alias vi="nvim"
 alias vim="nvim"
 alias zshconfig="nvim ~/.zshrc"
+alias gco="git checkout"
+alias gcb="git checkout -b"
+alias gcm="git commit -m"
+alias gca="git commit --amend"
 alias rebase="git fetch origin main && git rebase origin/main"
 
 # ----- Paths -----
@@ -43,6 +47,15 @@ uuid() {
   local uuid_str=$(uuidgen | tr '[:upper:]' '[:lower:]')
   echo "$uuid_str"
   echo -n "$uuid_str" | pbcopy
+}
+
+take() {
+  if [[ $# -ne 1 ]]; then
+    echo "usage: take <directory>" >&2
+    return 1
+  fi
+
+  mkdir -p -- "$1" && cd -- "$1"
 }
 
 # Override rm to move files to macOS Trash instead of permanent deletion

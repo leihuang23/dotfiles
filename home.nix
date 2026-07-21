@@ -79,6 +79,8 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/config.toml";
   home.file.".kimi-code/tui.toml".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/tui.toml";
+  home.file.".kimi-code/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/.kimi-code/AGENTS.md";
   home.file.".local/bin/install-skill".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/bin/install-skill";
 
@@ -88,4 +90,15 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  # Grok loads global rules from ~/.grok/{AGENTS,Agents,Claude}.md
+  home.file.".grok/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  # Kimi Code reads ~/.agents/AGENTS.md as generic cross-tool instructions.
+  home.file.".agents/AGENTS.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  # RTK instructions SSOT (Codex/Claude init + agents that @include this file)
+  home.file.".codex/RTK.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/RTK.md";
+  home.file.".claude/RTK.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/RTK.md";
 }

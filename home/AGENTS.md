@@ -22,3 +22,22 @@ Single source of truth for agent skills:
   `install-skill https://github.com/<owner>/<repo>/tree/<ref>/<path-to-skill>`
   (copies into `~/.agents/skills/<skill-id>/`; use `--force` to overwrite).
 - Or copy/clone manually into `~/.agents/skills/<skill-id>/` (must include `SKILL.md`).
+
+# RTK (Rust Token Killer)
+
+Always prefix shell commands with `rtk` so command output is compressed before it hits the LLM context (typically 60-90% fewer tokens on git/test/build/lint).
+
+```bash
+rtk git status
+rtk git diff
+rtk cargo test
+rtk npm test
+rtk pytest -q
+rtk ls .
+rtk grep "pattern" .
+rtk gh pr list
+```
+
+Meta: `rtk gain` (savings stats), `rtk proxy <cmd>` (raw unfiltered), `rtk --version`.
+
+Full reference: `~/.codex/RTK.md` (same content as managed `home/RTK.md`).

@@ -14,10 +14,10 @@
   system.stateVersion = 6;
   system.defaults = {
     NSGlobalDomain = {
-      AppleInterfaceStyle = "Dark";
+      # AppleInterfaceStyle = "Dark";
       KeyRepeat = 2;          # fast key repeat
       InitialKeyRepeat = 15;  # short delay before repeat
-      _HIHideMenuBar = true;  # auto-hide the menu bar
+      _HIHideMenuBar = false;  # auto-hide the menu bar
       AppleShowAllExtensions = true;
     };
     dock.autohide = true;
@@ -40,11 +40,13 @@
       "kimi-code"
       "gh"
       "tmux"
+      "rtk"  # CLI proxy that compresses command output for LLMs
     ];
     casks = [
       "wezterm"
       "claude-code"
       "cc-switch"  # GUI provider manager for Claude Code / Codex / etc.
+      "codexbar"
     ];
   };
 }
